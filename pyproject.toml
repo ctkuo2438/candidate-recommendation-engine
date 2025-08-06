@@ -1,0 +1,20 @@
+[project]
+name = "candidate-recommendation"
+version = "1.0"
+description = "Candidate Recommendation Engine"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "langchain",
+    "langchain-groq",
+    "langchain-community",
+    "sentence-transformers",
+    "transformers",
+    "python-multipart",
+    "pydantic",
+    "numpy",
+    "gradio",
+    "scikit-learn",
+    "pdfplumber",
+    "python-dotenv"
+]
