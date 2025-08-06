@@ -74,9 +74,7 @@ def create_interface():
         gr.Markdown("""
         ### Tips:
         - For best results, ensure job descriptions and resumes are detailed
-        - The system uses semantic similarity, so it understands context beyond keyword matching
         - Higher similarity scores (closer to 1.0) indicate better matches
-        - Set GROQ_API_KEY environment variable to enable AI-generated summaries
         """)
     
     return demo

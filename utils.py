@@ -6,21 +6,19 @@ def extract_text_from_file(file) -> str:
     try:
         if file is None:
             return ""
-        # Handle file path (string) or file object
+        # handle file path (string) or file object
         if hasattr(file, 'read'):
-            # It's a file object
-            file_content = file.read()
+            # it's a file object
+            file_content = file.read() # read bytes
             file_name = file.name.lower()
         else:
-            # It's a file path (string)
-            with open(file, 'rb') as f:
+            # it's a file path (string)
+            with open(file, 'rb') as f: # read bytes
                 file_content = f.read()
             file_name = file.lower()
         
         if file_name.endswith('.pdf'):
             return _extract_from_pdf(file_content)
-        elif file_name.endswith('.txt'):
-            return file_content.decode('utf-8')
         else:
             return file_content.decode('utf-8')
     except Exception as e:
@@ -28,9 +26,8 @@ def extract_text_from_file(file) -> str:
 
 def _extract_from_pdf(file_content: bytes) -> str:
     try:
-        pdf_file = io.BytesIO(file_content)
+        pdf_file = io.BytesIO(file_content) # object
         text = ""
-        
         with pdfplumber.open(pdf_file) as pdf:
             for page in pdf.pages:
                 page_text = page.extract_text()
@@ -48,27 +45,24 @@ def extract_candidate_name(resume_text: str) -> str:
     skip_keywords = ['email', 'phone', 'tel', '@', 'linkedin', 'github', 
                      'portfolio', 'address', 'http', 'www', '|', 'resume', 
                      'cv', 'curriculum']
-    
     for line in lines[:10]:
         line = line.strip()
         if not line:
             continue
-
         if any(keyword in line.lower() for keyword in skip_keywords):
             continue
             
-        # This handles cases like "John Smith | San Jose"
+        # handles cases like "John Smith | San Jose"
         parts = line.split('|')[0].strip()
         name_for_validation = parts
         if '(' in name_for_validation and ')' in name_for_validation:
-            # Extract name without parentheses content
+            # extract name without parentheses content
             name_for_validation = re.sub(r'\([^)]*\)', '', parts).strip()
-        
         words = name_for_validation.split()
         
         # check if it looks like a name (2-4 words)
         if 2 <= len(words) <= 4:
-            # check if words are mostly alphabetic (allowing for some special chars)
+            # check if words are mostly alphabetic
             valid_words = 0
             for word in words:
                 # remove common punctuation and check
@@ -79,5 +73,4 @@ def extract_candidate_name(resume_text: str) -> str:
             if valid_words >= len(words) * 0.6:
                 # return the original line part
                 return parts
-    
     return "Unknown Name"
