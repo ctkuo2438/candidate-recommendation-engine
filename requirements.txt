@@ -4,7 +4,10 @@ sentence-transformers
 transformers
 langchain
 langchain-groq
+langchain-community
 langchain-text-splitters
 scikit-learn
 python-dotenv
 pdfplumber
+python-multipart
+pydantic
