@@ -1,12 +1,12 @@
 import numpy as np
 from sentence_transformers import SentenceTransformer
 from transformers import AutoTokenizer
-from langchain.text_splitter import SentenceTransformersTokenTextSplitter
+from langchain_text_splitters import SentenceTransformersTokenTextSplitter
 from sklearn.metrics.pairwise import cosine_similarity
 from typing import List, Tuple
 import os
-from langchain.prompts import PromptTemplate
-from langchain.chains import LLMChain
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.output_parsers import StrOutputParser
 from langchain_groq import ChatGroq
 from utils import extract_text_from_file, extract_candidate_name
 from dotenv import load_dotenv
@@ -28,7 +28,7 @@ class CandidateRecommendationEngine:
         self.groq_available = False
         try:
             if os.getenv("GROQ_API_KEY"):
-                self.llm = ChatGroq(temperature=0.5, model="llama3-8b-8192")
+                self.llm = ChatGroq(temperature=0.5, model="llama-3.1-8b-instant")
                 self.groq_available = True
                 print("GROQ API initialized successfully")
         except Exception as e:
@@ -97,10 +97,8 @@ class CandidateRecommendationEngine:
         if not self.groq_available:
             return "LLM summary requires GROQ API key"
         try:
-            # prompt for llm to generate a summary
-            prompt_template = PromptTemplate(
-                input_variables=["job_description", "resume_text", "candidate_name"],
-                template="""
+            prompt_template = ChatPromptTemplate.from_template(
+                """
                 Based on the job description and {candidate_name}'s resume, 
                 explain in 2-3 sentences why this candidate is a great fit for the role. 
                 Focus on specific matching skills, experiences, and qualifications.
@@ -114,11 +112,13 @@ class CandidateRecommendationEngine:
                 Response format: Start with "{candidate_name} is an excellent fit because..." and highlight the most relevant qualifications.
                 """
             )
-            chain = LLMChain(llm=self.llm, prompt=prompt_template)
-            summary = chain.run(
-                job_description=job_description,
-                resume_text=resume_text,
-                candidate_name=candidate_name
+            chain = prompt_template | self.llm | StrOutputParser()
+            summary = chain.invoke(
+                {
+                    "job_description": job_description,
+                    "resume_text": resume_text,
+                    "candidate_name": candidate_name
+                }
             )
             return summary.strip()
         except Exception as e:

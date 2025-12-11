@@ -8,6 +8,7 @@ dependencies = [
     "langchain",
     "langchain-groq",
     "langchain-community",
+    "langchain-text-splitters",
     "sentence-transformers",
     "transformers",
     "python-multipart",
@@ -16,5 +17,8 @@ dependencies = [
     "gradio",
     "scikit-learn",
     "pdfplumber",
-    "python-dotenv"
+    "python-dotenv",
 ]
+
+[tool.setuptools]
+py-modules = ["app", "main", "utils"]

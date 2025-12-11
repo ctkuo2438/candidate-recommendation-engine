@@ -61,7 +61,6 @@ def create_interface():
                     label="Recommendation Results",
                     lines=25,
                     max_lines=30,
-                    show_copy_button=True
                 )
         
         # set up the interface
@@ -80,4 +79,5 @@ def create_interface():
     return demo
 
 demo = create_interface()
-demo.launch()
+# listen on all interfaces
+demo.launch(server_name="0.0.0.0", server_port=7860)

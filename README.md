@@ -15,7 +15,7 @@ Live Demo: [https://huggingface.co/spaces/ctk2438/candidate-recommendation-engin
   - SentenceTransformers (all-MiniLM-L6-v2)
   - scikit-learn (cosine similarity)
   - LangChain (text chunking)
-- **LLM Integration**: Groq API (Llama3-8b-8192)
+- **LLM Integration**: Groq API (llama-3.1-8b-instant)
 - **Frontend**: Gradio
 - **File Processing**: pdfplumber
 - **Deployment**: Hugging Face Spaces
